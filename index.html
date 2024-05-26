@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Plot</title>
+    <style>
+        body {
+            height: 100vh;
+            margin: 50px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+        #theory {
+            background-color: white;
+        }
+        #simulation {
+            background-color: black;
+        }
+        .slider-container {
+            display: inline-block;
+            margin-top: 5px;
+            margin-right: 20px;
+        }
+        .slider-container label {
+            margin-top: 5px;
+            margin-right: 20px;
+        }
+        .button-container {
+            display: inline-block;
+            margin-top: 5px;
+            margin-right: 20px;
+        }
+        .checkbox-container {
+            display: inline-block;
+            margin-top: 5px;
+            margin-right: 20px;
+        }
+        .checkbox-container label {
+            margin-top: 5px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <label for="kSlider">k</label>
+        <input type="range" id="kSlider" min="0.1" max="20" value="10" step="0.1">
+        <span id="kValue">10</span>
+    </div>
+    <br>
+    <div class="slider-container">
+        <label for="aSlider">a</label>
+        <input type="range" id="aSlider" min="0.1" max="20" value="10" step="0.1">
+        <span id="aValue">2</span>
+    </div>
+    <br>
+    <div class="slider-container">
+        <label for="bSlider">b</label>
+        <input type="range" id="bSlider" min="0.1" max="10" value="1" step="0.1">
+        <span id="bValue">2</span>
+    </div>
+    <br>
+    <div class="button-container">
+        <input type="button" id="button1" value="1 Photon">
+    </div>
+    <div class="button-container">
+        <input type="button" id="button10" value="10 Photonen">
+    </div>
+    <div class="button-container">
+        <input type="button" id="button1000" value="1.000 Photonen">
+    </div>
+    <div class="checkbox-container">
+        <label for="theoryCheckbox">Theoretischer Intensitätsverlauf</label>
+        <input type="checkbox" id="theoryCheckbox">
+    </div>
+    <br>
+    <div class="button-container">
+        <input type="button" id="resetButton" value="Reset">
+    </div>
+    <br>
+    <canvas id="theory" width="800" height="200"></canvas>
+    <br>
+    <canvas id="simulation" width="800" height="200"></canvas>
+    <script src="plot.js"></script>
+</body>
+</html>
