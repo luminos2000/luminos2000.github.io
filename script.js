@@ -1,0 +1,245 @@
+document.addEventListener("DOMContentLoaded", () => {
+    try {
+        const canvasTheory = document.getElementById('theory');
+        const ctxTheory = canvasTheory.getContext('2d');
+        const canvasSimulation = document.getElementById('simulation');
+        const ctxSimulation = canvasSimulation.getContext('2d');
+        const lambdaSlider = document.getElementById('lambdaSlider');
+        const aSlider = document.getElementById('aSlider');
+        const bSlider = document.getElementById('bSlider');
+        const lambdaValue = document.getElementById('lambdaValue');
+        const aValue = document.getElementById('aValue');
+        const bValue = document.getElementById('bValue');
+        const button1 = document.getElementById('button1');
+        const button10 = document.getElementById('button10');
+        const button1000 = document.getElementById('button1000');
+        const resetButton = document.getElementById('resetButton');
+        const theoryCheckbox = document.getElementById('theoryCheckbox');
+        const leftSlitRadio = document.getElementById('leftSlitRadio');
+        const rightSlitRadio = document.getElementById('rightSlitRadio');
+        const doubleSlitRadio = document.getElementById('doubleSlitRadio');
+        const setupImage = document.getElementById('setupImage');
+
+        const lambdaDef = parseFloat(lambdaSlider.value);
+        const aDef = parseFloat(aSlider.value);
+        const bDef = parseFloat(bSlider.value);
+
+        let lambda = lambdaDef;
+        let a = aDef;
+        let b = bDef;
+
+        let theoryToggle = theoryCheckbox.checked;
+        const theoryToggleDef = false;
+
+        let slitToggle = 'left';
+        const slitToggleDef = 'left';
+        setupImage.src = slitToggle+'.png';
+
+        const plotWidth = canvasTheory.width;
+        const plotHeight = canvasTheory.height;
+        const xMin = -Math.PI / 2;
+        const xMax = Math.PI / 2;
+        const yMin = 0;
+        const yMax = 1;
+
+        const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+        const f = x => {
+            let k = 2 * Math.PI / lambda
+            if (slitToggle === 'left') {
+                return (Math.sin(k * b * Math.sin(x + 0.03) / 2) / (k * b * Math.sin(x + 0.03) / 2)) ** 2;
+            } else if (slitToggle === 'right') {
+                return (Math.sin(k * b * Math.sin(x - 0.03) / 2) / (k * b * Math.sin(x - 0.03) / 2)) ** 2;
+            } else {
+                return (Math.sin(k * b * Math.sin(x) / 2) / (k * b * Math.sin(x) / 2)) ** 2
+                    * (Math.cos(k * a * Math.sin(x) / 2)) ** 2;
+            }
+        };
+
+        const fInt = (xMin, xMax) => {
+            const xStep = 0.001;
+            let integral = 0;
+            for (let x = xMin; x <= xMax; x += xStep) {
+                integral += f(x) * xStep;
+            }
+            return integral;
+        };
+
+        let norm = fInt(xMin, xMax);
+        const angleArray = Array.from({ length: 401 }, (_, i) => xMin + (xMax - xMin) * i / 400);
+        let countingArray = new Array(angleArray.length).fill(0);
+
+        const resetCountingArray = () => countingArray.fill(0);
+
+        const updateCountingArray = x => {
+            const index = angleArray.findIndex(angle => x < angle);
+            if (index !== -1) countingArray[index]++;
+        };
+
+        const chooseX = () => {
+            const xStep = 0.001;
+            const randNum = norm * Math.random();
+            let integral = 0;
+            for (let x = xMin; x <= xMax; x += xStep) {
+                integral += f(x) * xStep;
+                if (randNum < integral) {
+                    return x;
+                }
+            }
+        };
+
+        const transformX = x => (x - xMin) / (xMax - xMin) * plotWidth;
+
+        const transformY = y => plotHeight - (y - yMin) / (yMax - yMin) * plotHeight;
+
+        const drawPoint = (x, y) => {
+            ctxSimulation.beginPath();
+            ctxSimulation.arc(transformX(x), transformY(y), 1, 0, Math.PI * 2);
+            ctxSimulation.fillStyle = 'white';
+            ctxSimulation.fill();
+            ctxSimulation.closePath();
+        };
+
+        const plotFunction = () => {
+            ctxTheory.beginPath();
+            angleArray.forEach((x, i) => {
+                const canvasX = transformX(x);
+                const canvasY = transformY(f(x));
+                if (i === 0) {
+                    ctxTheory.moveTo(canvasX, canvasY);
+                } else {
+                    ctxTheory.lineTo(canvasX, canvasY);
+                }
+            });
+            ctxTheory.strokeStyle = 'black';
+            ctxTheory.stroke();
+        };
+
+        const plotBarChart = () => {
+            const barWidth = plotWidth / countingArray.length;
+            const maxDataValue = Math.max(...countingArray);
+
+            countingArray.forEach((value, index) => {
+                const barHeight = value / maxDataValue;
+                const x = transformX(angleArray[index]);
+                const y = transformY(barHeight);
+
+                ctxTheory.fillStyle = 'red';
+                ctxTheory.fillRect(x, y, barWidth, barHeight * plotHeight);
+            });
+        };
+
+        const updateTheoryCanvas = () => {
+            ctxTheory.clearRect(0, 0, plotWidth, plotHeight);
+            plotBarChart();
+            if (theoryToggle) {
+                plotFunction();
+            }
+        };
+
+        const updateSimulationCanvas = async (n, time) => {
+            for (let j = 0; j < n; j++) {
+                const randomX = chooseX();
+                const randomY = Math.random();
+                updateCountingArray(randomX);
+                drawPoint(randomX, randomY);
+                await sleep(time / (n * 100));
+            }
+            updateTheoryCanvas();
+        };
+
+        const resetSimulationCanvas = () => {
+            ctxSimulation.clearRect(0, 0, plotWidth, plotHeight);
+        };
+
+        const updateParameters = () => {
+            lambda = parseFloat(lambdaSlider.value);
+            a = parseFloat(aSlider.value);
+            b = parseFloat(bSlider.value);
+            lambdaValue.textContent = lambda;
+            aValue.textContent = a;
+            bValue.textContent = b;
+            norm = fInt(xMin, xMax);
+        };
+
+        const resetParameters = () => {
+            lambdaSlider.value = lambdaDef;
+            aSlider.value = aDef;
+            bSlider.value = bDef;
+
+            theoryToggle = theoryToggleDef;
+            theoryCheckbox.checked = theoryToggleDef;
+
+            doubleSlitRadio.checked = false;
+            rightSlitRadio.checked = false;
+            leftSlitRadio.checked = true;
+            slitToggle = slitToggleDef;
+            setupImage.src = slitToggle+'.png';
+            updateParameters();
+        };
+
+        const toggleTheory = () => {
+            theoryToggle = !theoryToggle;
+            updateTheoryCanvas();
+        };
+
+        const updateSetup = () => {
+            slitToggle = leftSlitRadio.checked ? 'left' : rightSlitRadio.checked ? 'right' : 'double';
+            setupImage.src = slitToggle+'.png';
+            norm = fInt(xMin, xMax);
+            resetSimulationCanvas();
+            resetCountingArray();
+            updateTheoryCanvas();
+        };
+
+        lambdaSlider.addEventListener('input', () => {
+            updateParameters();
+            resetSimulationCanvas();
+            resetCountingArray();
+            updateTheoryCanvas();
+        });
+
+        aSlider.addEventListener('input', () => {
+            updateParameters();
+            resetSimulationCanvas();
+            resetCountingArray();
+            updateTheoryCanvas();
+        });
+
+        bSlider.addEventListener('input', () => {
+            updateParameters();
+            resetSimulationCanvas();
+            resetCountingArray();
+            updateTheoryCanvas();
+        });
+
+        button1.addEventListener('click', () => {
+            updateSimulationCanvas(1, 0);
+        });
+
+        button10.addEventListener('click', () => {
+            updateSimulationCanvas(10, 1000);
+        });
+
+        button1000.addEventListener('click', () => {
+            updateSimulationCanvas(1000, 1000);
+        });
+
+        resetButton.addEventListener('click', () => {
+            resetParameters();
+            resetSimulationCanvas();
+            resetCountingArray();
+            updateTheoryCanvas();
+        });
+
+        theoryCheckbox.addEventListener('change', toggleTheory);
+
+        leftSlitRadio.addEventListener('change', updateSetup);
+        rightSlitRadio.addEventListener('change', updateSetup);
+        doubleSlitRadio.addEventListener('change', updateSetup);
+
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+});
+

@@ -1,92 +1,96 @@
-<!--
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Plot</title>
-    <style>
-        body {
-            height: 100vh;
-            margin: 50px;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-        canvas {
-            border: 1px solid black;
-            margin-top: 20px;
-        }
-        #theory {
-            background-color: white;
-        }
-        #simulation {
-            background-color: black;
-        }
-        .slider-container {
-            display: inline-block;
-            margin-top: 5px;
-            margin-right: 20px;
-        }
-        .slider-container label {
-            margin-top: 5px;
-            margin-right: 20px;
-        }
-        .button-container {
-            display: inline-block;
-            margin-top: 5px;
-            margin-right: 20px;
-        }
-        .checkbox-container {
-            display: inline-block;
-            margin-top: 5px;
-            margin-right: 20px;
-        }
-        .checkbox-container label {
-            margin-top: 5px;
-            margin-right: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="slider-container">
-        <label for="kSlider">k</label>
-        <input type="range" id="kSlider" min="0.1" max="20" value="10" step="0.1">
-        <span id="kValue">10</span>
+    <h1>Doppelspaltexperiment</h1>
+    <h3>Histogramm</h3>
+    <canvas id="theory" width="600" height="200"></canvas>
+    <h3>Schirmbild</h3>
+    <canvas id="simulation" width="600" height="100"></canvas>
+    <div id="tableContainer1">
+        <table id="controlPanel">
+            <tbody>
+                <tr><td>Simulationsparameter:</td></tr>
+                <tr>
+                    <td><label for="lambdaSlider">Wellenlänge <i>&lambda;</i> / nm</label></td>
+                    <td>
+                        <input type="range" id="lambdaSlider" min="380" max="780" value="550" step="1">
+                        <span id="lambdaValue">550</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="aSlider">Spaltabstand <i>a</i> / nm</label></td>
+                    <td>
+                        <input type="range" id="aSlider" min="1000" max="5000" value="3000" step="1">
+                        <span id="aValue">2000</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="bSlider">Spaltbreite <i>b</i> / nm</label></td>
+                    <td>
+                        <input type="range" id="bSlider" min="10" max="1000" value="500" step="1">
+                        <span id="bValue">500</span>
+                    </td>
+                </tr>
+                <tr><td></td></tr>
+                <tr>
+                    <td>Photonen erzeugen:</td>
+                    <td><input type="button" id="button1" value="1 Photon"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="button" id="button10" value="10 Photonen"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="button" id="button1000" value="1.000 Photonen"></td>
+                </tr>
+                <tr><td></td></tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="theoryCheckbox">Theoretischen Intensitätsverlauf einblenden:</label>
+                        <input type="checkbox" id="theoryCheckbox">
+                    </td>
+                </tr>
+                <tr><td></td></tr>
+                <form>
+                    <tr>
+                        <td>Spaltauswahl:</td>
+                        <td>
+                            <input type="radio" id="leftSlitRadio" name="setupRadio" value="left" checked="checked">
+                            <label for="leftSlitRadio">Links</label>
+                        </td>
+                        <td rowspan="3"><img id="setupImage" height="100"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="radio" id="rightSlitRadio" name="setupRadio" value="right">
+                            <label for="rightSlitRadio">Rechts</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="radio" id="doubleSlitRadio" name="setupRadio" value="both">
+                            <label for="doubleSlitRadio">Beide</label>
+                        </td>
+                    </tr>
+                </form>
+                <tr><td></td></tr>
+                <tr>
+                    <td>Simulation zurücksetzen:</td>
+                    <td><input type="button" id="resetButton" value="Reset"></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <br>
-    <div class="slider-container">
-        <label for="aSlider">a</label>
-        <input type="range" id="aSlider" min="0.1" max="20" value="10" step="0.1">
-        <span id="aValue">2</span>
-    </div>
-    <br>
-    <div class="slider-container">
-        <label for="bSlider">b</label>
-        <input type="range" id="bSlider" min="0.1" max="10" value="1" step="0.1">
-        <span id="bValue">2</span>
-    </div>
-    <br>
-    <div class="button-container">
-        <input type="button" id="button1" value="1 Photon">
-    </div>
-    <div class="button-container">
-        <input type="button" id="button10" value="10 Photonen">
-    </div>
-    <div class="button-container">
-        <input type="button" id="button1000" value="1.000 Photonen">
-    </div>
-    <div class="checkbox-container">
-        <label for="theoryCheckbox">Theoretischer Intensitätsverlauf</label>
-        <input type="checkbox" id="theoryCheckbox">
-    </div>
-    <br>
-    <div class="button-container">
-        <input type="button" id="resetButton" value="Reset">
-    </div>
-    <br>
-    <canvas id="theory" width="800" height="200"></canvas>
-    <br>
-    <canvas id="simulation" width="800" height="200"></canvas>
-    <script src="plot.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
--->
