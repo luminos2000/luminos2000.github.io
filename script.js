@@ -23,16 +23,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const lambdaDef = parseFloat(lambdaSlider.value);
         const aDef = parseFloat(aSlider.value);
         const bDef = parseFloat(bSlider.value);
+        const doubleSlitDef = doubleSlitRadio.checked;
+        const rightSlitDef = rightSlitRadio.checked;
+        const leftSlitDef = leftSlitRadio.checked;
+        const slitToggleDef = leftSlitRadio.checked ? 'left' : rightSlitRadio.checked ? 'right' : 'double';
+        const theoryToggleDef = theoryCheckbox.checked;
 
         let lambda = lambdaDef;
         let a = aDef;
         let b = bDef;
-
-        let theoryToggle = theoryCheckbox.checked;
-        const theoryToggleDef = false;
-
-        let slitToggle = 'left';
-        const slitToggleDef = 'left';
+        let slitToggle = slitToggleDef;
+        let theoryToggle = theoryToggleDef;
+        
         setupImage.src = slitToggle+'.png';
 
         const theoryPlotWidth = canvasTheory.width;
@@ -160,14 +162,20 @@ document.addEventListener("DOMContentLoaded", () => {
             ctxSimulation.clearRect(0, 0, simulationPlotWidth, simulationPlotHeight);
         };
 
+        
         const updateParameters = () => {
+            slitToggle = leftSlitRadio.checked ? 'left' : rightSlitRadio.checked ? 'right' : 'double';
+            
             lambda = parseFloat(lambdaSlider.value);
             a = parseFloat(aSlider.value);
             b = parseFloat(bSlider.value);
+
             lambdaValue.textContent = lambda;
             aValue.textContent = a;
             bValue.textContent = b;
+
             norm = fInt(xMin, xMax);
+            setupImage.src = slitToggle+'.png';
         };
 
         const resetParameters = () => {
@@ -175,31 +183,14 @@ document.addEventListener("DOMContentLoaded", () => {
             aSlider.value = aDef;
             bSlider.value = bDef;
 
-            theoryToggle = theoryToggleDef;
             theoryCheckbox.checked = theoryToggleDef;
+            theoryToggle = theoryToggleDef;
 
-            doubleSlitRadio.checked = false;
-            rightSlitRadio.checked = false;
-            leftSlitRadio.checked = true;
-            slitToggle = slitToggleDef;
-            setupImage.src = slitToggle+'.png';
+            doubleSlitRadio.checked = doubleSlitDef;
+            rightSlitRadio.checked = rightSlitDef;
+            leftSlitRadio.checked = leftSlitDef;
             updateParameters();
         };
-
-        const toggleTheory = () => {
-            theoryToggle = !theoryToggle;
-            updateTheoryCanvas();
-        };
-
-        const updateSetup = () => {
-            slitToggle = leftSlitRadio.checked ? 'left' : rightSlitRadio.checked ? 'right' : 'double';
-            setupImage.src = slitToggle+'.png';
-            norm = fInt(xMin, xMax);
-            resetSimulationCanvas();
-            resetCountingArray();
-            updateTheoryCanvas();
-        };
-
 
         
         lambdaSlider.addEventListener('input', () => {
@@ -223,6 +214,33 @@ document.addEventListener("DOMContentLoaded", () => {
             updateTheoryCanvas();
         });
 
+        leftSlitRadio.addEventListener('change', () => {
+            updateParameters();
+            resetSimulationCanvas();
+            resetCountingArray();
+            updateTheoryCanvas();
+        });
+
+        rightSlitRadio.addEventListener('change', () => {
+            updateParameters();
+            resetSimulationCanvas();
+            resetCountingArray();
+            updateTheoryCanvas();
+        });
+
+        doubleSlitRadio.addEventListener('change', () => {
+            updateParameters();
+            resetSimulationCanvas();
+            resetCountingArray();
+            updateTheoryCanvas();
+        });
+
+        theoryCheckbox.addEventListener('change', () => {
+            theoryToggle = theoryCheckbox.checked;
+            updateTheoryCanvas();
+        });
+
+
         button1.addEventListener('click', () => {
             updateSimulationCanvas(1, 0);
         });
@@ -241,12 +259,6 @@ document.addEventListener("DOMContentLoaded", () => {
             resetCountingArray();
             updateTheoryCanvas();
         });
-
-        theoryCheckbox.addEventListener('change', toggleTheory);
-
-        leftSlitRadio.addEventListener('change', updateSetup);
-        rightSlitRadio.addEventListener('change', updateSetup);
-        doubleSlitRadio.addEventListener('change', updateSetup);
 
     } catch (error) {
         console.error('An error occurred:', error);
