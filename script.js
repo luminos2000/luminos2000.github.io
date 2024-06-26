@@ -35,12 +35,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const slitToggleDef = 'left';
         setupImage.src = slitToggle+'.png';
 
-        const plotWidth = canvasTheory.width;
-        const plotHeight = canvasTheory.height;
+        const theoryPlotWidth = canvasTheory.width;
+        const theoryPlotHeight = canvasTheory.height;
+        const simulationPlotWidth = canvasSimulation.width;
+        const simulationPlotHeight = canvasSimulation.height;
         const xMin = -Math.PI / 2;
         const xMax = Math.PI / 2;
         const yMin = 0;
         const yMax = 1;
+
 
         const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -88,13 +91,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
 
-        const transformX = x => (x - xMin) / (xMax - xMin) * plotWidth;
+        const theoryTransformX = x => theoryPlotWidth * ((x - xMin) / (xMax - xMin));
 
-        const transformY = y => plotHeight - (y - yMin) / (yMax - yMin) * plotHeight;
+        const theoryTransformY = y => theoryPlotHeight * (1 - (y - yMin) / (yMax - yMin));
+
+        const simulationTransformX = x =>  simulationPlotWidth * ((x - xMin) / (xMax - xMin));
+
+        const simulationTransformY = y => simulationPlotHeight * (1 - (y - yMin) / (yMax - yMin));
+
 
         const drawPoint = (x, y) => {
             ctxSimulation.beginPath();
-            ctxSimulation.arc(transformX(x), transformY(y), 1, 0, Math.PI * 2);
+            ctxSimulation.arc(simulationTransformX(x),  simulationTransformY(y), 1, 0, Math.PI * 2);
             ctxSimulation.fillStyle = 'white';
             ctxSimulation.fill();
             ctxSimulation.closePath();
@@ -103,8 +111,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const plotFunction = () => {
             ctxTheory.beginPath();
             angleArray.forEach((x, i) => {
-                const canvasX = transformX(x);
-                const canvasY = transformY(f(x));
+                const canvasX = theoryTransformX(x);
+                const canvasY = theoryTransformY(f(x));
                 if (i === 0) {
                     ctxTheory.moveTo(canvasX, canvasY);
                 } else {
@@ -116,21 +124,21 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         const plotBarChart = () => {
-            const barWidth = plotWidth / countingArray.length;
+            const barWidth = theoryPlotWidth / countingArray.length;
             const maxDataValue = Math.max(...countingArray);
 
             countingArray.forEach((value, index) => {
                 const barHeight = value / maxDataValue;
-                const x = transformX(angleArray[index]);
-                const y = transformY(barHeight);
+                const x = theoryTransformX(angleArray[index]);
+                const y = theoryTransformY(barHeight);
 
                 ctxTheory.fillStyle = 'red';
-                ctxTheory.fillRect(x, y, barWidth, barHeight * plotHeight);
+                ctxTheory.fillRect(x, y, barWidth, barHeight * theoryPlotHeight);
             });
         };
 
         const updateTheoryCanvas = () => {
-            ctxTheory.clearRect(0, 0, plotWidth, plotHeight);
+            ctxTheory.clearRect(0, 0, theoryPlotWidth, theoryPlotHeight);
             plotBarChart();
             if (theoryToggle) {
                 plotFunction();
@@ -139,17 +147,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const updateSimulationCanvas = async (n, time) => {
             for (let j = 0; j < n; j++) {
+                await sleep(time / n);
                 const randomX = chooseX();
                 const randomY = Math.random();
                 updateCountingArray(randomX);
                 drawPoint(randomX, randomY);
-                await sleep(time / (n * 100));
             }
             updateTheoryCanvas();
         };
 
         const resetSimulationCanvas = () => {
-            ctxSimulation.clearRect(0, 0, plotWidth, plotHeight);
+            ctxSimulation.clearRect(0, 0, simulationPlotWidth, simulationPlotHeight);
         };
 
         const updateParameters = () => {
@@ -192,6 +200,8 @@ document.addEventListener("DOMContentLoaded", () => {
             updateTheoryCanvas();
         };
 
+
+        
         lambdaSlider.addEventListener('input', () => {
             updateParameters();
             resetSimulationCanvas();

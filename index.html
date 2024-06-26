@@ -15,29 +15,6 @@
     <div id="tableContainer1">
         <table id="controlPanel">
             <tbody>
-                <tr><td>Simulationsparameter:</td></tr>
-                <tr>
-                    <td><label for="lambdaSlider">Wellenlänge <i>&lambda;</i> / nm</label></td>
-                    <td>
-                        <input type="range" id="lambdaSlider" min="380" max="780" value="550" step="1">
-                        <span id="lambdaValue">550</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="aSlider">Spaltabstand <i>a</i> / nm</label></td>
-                    <td>
-                        <input type="range" id="aSlider" min="1000" max="5000" value="3000" step="1">
-                        <span id="aValue">2000</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="bSlider">Spaltbreite <i>b</i> / nm</label></td>
-                    <td>
-                        <input type="range" id="bSlider" min="10" max="1000" value="500" step="1">
-                        <span id="bValue">500</span>
-                    </td>
-                </tr>
-                <tr><td></td></tr>
                 <tr>
                     <td>Photonen erzeugen:</td>
                     <td><input type="button" id="button1" value="1 Photon"></td>
@@ -83,6 +60,29 @@
                     </tr>
                 </form>
                 <tr><td></td></tr>
+                <tr><td>Simulationsparameter:</td></tr>
+                <tr>
+                    <td><label for="lambdaSlider">Wellenlänge <i>&lambda;</i> / nm</label></td>
+                    <td>
+                        <input type="range" id="lambdaSlider" min="380" max="780" value="550" step="1">
+                        <span id="lambdaValue">550</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="aSlider">Spaltabstand <i>a</i> / nm</label></td>
+                    <td>
+                        <input type="range" id="aSlider" min="1000" max="5000" value="3000" step="1">
+                        <span id="aValue">2000</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="bSlider">Spaltbreite <i>b</i> / nm</label></td>
+                    <td>
+                        <input type="range" id="bSlider" min="10" max="1000" value="500" step="1">
+                        <span id="bValue">500</span>
+                    </td>
+                </tr>
+                <tr><td></td></tr>
                 <tr>
                     <td>Simulation zurücksetzen:</td>
                     <td><input type="button" id="resetButton" value="Reset"></td>
@@ -90,7 +90,8 @@
             </tbody>
         </table>
     </div>
-    <object width="200" height="200" type="application/pdf" data="test.pdf"></object>
+
+    <!--<object width="200" height="200" type="application/pdf" data="test.pdf"></object>-->
     <script src="script.js"></script>
 </body>
 </html>
