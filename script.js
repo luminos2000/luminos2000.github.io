@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let slitToggle = slitToggleDef;
         let theoryToggle = theoryToggleDef;
         
-        setupImage.src = slitToggle+'.png';
+        setupImage.src = slitToggle+'.JPG';
 
         const theoryPlotWidth = canvasTheory.width;
         const theoryPlotHeight = canvasTheory.height;
@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctxSimulation.clearRect(0, 0, simulationPlotWidth, simulationPlotHeight);
         };
 
-        
+
         const updateParameters = () => {
             slitToggle = leftSlitRadio.checked ? 'left' : rightSlitRadio.checked ? 'right' : 'double';
             
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
             bValue.textContent = b;
 
             norm = fInt(xMin, xMax);
-            setupImage.src = slitToggle+'.png';
+            setupImage.src = slitToggle+'.JPG';
         };
 
         const resetParameters = () => {
