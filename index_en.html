@@ -9,41 +9,41 @@
 <body>
     <a href="index_en.html"><img src="gb.png" alt="DE" height="20"></a>
     <a href="index.html"><img src="de.png" alt="DE" height="20"></a>
-    <h1>Doppelspaltexperiment</h1>
+    <h1>Double-slit experiment</h1>
     <p>&copy Lukas Haugk, Alexander Schuster</p>
-    <h3>Histogramm</h3>
+    <h3>Histogram</h3>
     <canvas id="theory" width="600" height="200"></canvas>
-    <h3>Schirmbild</h3>
+    <h3>Screen</h3>
     <canvas id="simulation" width="600" height="100"></canvas>
 
     <table id="controlPanel">
         <tbody>
             <tr>
-                <td>Photonen erzeugen:</td>
-                <td><input type="button" id="button1" value="1 Photon"></td>
+                <td>Generate photons:</td>
+                <td><input type="button" id="button1" value="1 photon"></td>
             </tr>
             <tr>
                 <td></td>
-                <td><input type="button" id="button10" value="10 Photonen"></td>
+                <td><input type="button" id="button10" value="10 photons"></td>
                 </tr>
             <tr>
                 <td></td>
-                <td><input type="button" id="button1000" value="1.000 Photonen"></td>
+                <td><input type="button" id="button1000" value="1.000 photons"></td>
             </tr>
             <tr><td></td></tr>
             <tr>
                 <td colspan="2">
-                    <label for="theoryCheckbox">Theoretischen Intensitätsverlauf einblenden:</label>
+                    <label for="theoryCheckbox">Display theoretical intensity distribution:</label>
                     <input type="checkbox" id="theoryCheckbox">
                 </td>
             </tr>
             <tr><td></td></tr>
             <form>
                 <tr>
-                    <td>Spaltauswahl:</td>
+                    <td>Slit selection:</td>
                     <td>
                         <input type="radio" id="doubleSlitRadio" name="setupRadio" value="both" checked="checked">
-                        <label for="doubleSlitRadio">Doppelspalt</label>
+                        <label for="doubleSlitRadio">Double-slit</label>
                     </td>
                     <td rowspan="3"><img id="setupImage" height="200"></td>
                 </tr>
@@ -51,35 +51,35 @@
                     <td></td>
                     <td>
                         <input type="radio" id="rightSlitRadio" name="setupRadio" value="right">
-                        <label for="rightSlitRadio">Einzelspalt rechts</label>
+                        <label for="rightSlitRadio">Single slit on the right</label>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
                         <input type="radio" id="leftSlitRadio" name="setupRadio" value="left">
-                        <label for="leftSlitRadio">Einzelspalt links</label>
+                        <label for="leftSlitRadio">Single slit on the left</label>
                     </td>
                 </tr>
             </form>
             <tr><td></td></tr>
-            <tr><td>Simulationsparameter:</td></tr>
+            <tr><td>Simulation parameters:</td></tr>
             <tr>
-                <td><label for="lambdaSlider">Wellenlänge <i>&lambda;</i> / nm</label></td>
+                <td><label for="lambdaSlider">Wavelength <i>&lambda;</i> / nm</label></td>
                 <td>
                     <input type="range" id="lambdaSlider" min="380" max="780" value="550" step="1">
                     <span id="lambdaValue">550</span>
                 </td>
             </tr>
             <tr>
-                <td><label for="aSlider">Spaltabstand <i>a</i> / nm</label></td>
+                <td><label for="aSlider">Slit spacing <i>a</i> / nm</label></td>
                 <td>
                     <input type="range" id="aSlider" min="1000" max="5000" value="3000" step="1">
                     <span id="aValue">2000</span>
                 </td>
             </tr>
             <tr>
-                <td><label for="bSlider">Spaltbreite <i>b</i> / nm</label></td>
+                <td><label for="bSlider">Slit width <i>b</i> / nm</label></td>
                 <td>
                     <input type="range" id="bSlider" min="10" max="1000" value="500" step="1">
                     <span id="bValue">500</span>
@@ -87,7 +87,7 @@
             </tr>
             <tr><td></td></tr>
             <tr>
-                <td>Simulation zurücksetzen:</td>
+                <td>Reset simulation:</td>
                 <td><input type="button" id="resetButton" value="Reset"></td>
             </tr>
         </tbody>
