@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let slitToggle = slitToggleDef;
         let theoryToggle = theoryToggleDef;
         
-        setupImage.src = slitToggle+'.JPG';
+        setupImage.src = slitToggle+'_'+LANGUAGE+'.png';
 
         const theoryPlotWidth = canvasTheory.width;
         const theoryPlotHeight = canvasTheory.height;
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
             bValue.textContent = b;
 
             norm = fInt(xMin, xMax);
-            setupImage.src = slitToggle+'.JPG';
+            setupImage.src = slitToggle+'_'+LANGUAGE+'.png';
         };
 
         const resetParameters = () => {
