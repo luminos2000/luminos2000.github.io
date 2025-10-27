@@ -52,9 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const f = x => {
             let k = 2 * Math.PI / lambda
             if (slitToggle === 'left') {
-                return (Math.sin(k * b * Math.sin(x + 0.03) / 2) / (k * b * Math.sin(x + 0.03) / 2)) ** 2;
+                return (Math.sin(k * b * Math.sin(x + 0.1) / 2) / (k * b * Math.sin(x + 0.1) / 2)) ** 2;
             } else if (slitToggle === 'right') {
-                return (Math.sin(k * b * Math.sin(x - 0.03) / 2) / (k * b * Math.sin(x - 0.03) / 2)) ** 2;
+                return (Math.sin(k * b * Math.sin(x - 0.1) / 2) / (k * b * Math.sin(x - 0.1) / 2)) ** 2;
             } else {
                 return (Math.sin(k * b * Math.sin(x) / 2) / (k * b * Math.sin(x) / 2)) ** 2
                     * (Math.cos(k * a * Math.sin(x) / 2)) ** 2;
@@ -101,6 +101,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const simulationTransformY = y => simulationPlotHeight * (1 - (y - yMin) / (yMax - yMin));
 
+        const drawOriginLine = () => {
+            const x = theoryTransformX(0);
+            const y1 = theoryTransformY(yMin);
+            const y2 = theoryTransformY(yMax);
+            ctxTheory.beginPath();
+            ctxTheory.moveTo(x, y1);
+            ctxTheory.lineTo(x, y2);
+            ctxTheory.setLineDash([5, 5])
+            ctxTheory.strokeStyle = 'black';
+            ctxTheory.stroke();
+            ctxTheory.setLineDash([]);
+        };
 
         const drawPoint = (x, y) => {
             ctxSimulation.beginPath();
@@ -145,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (theoryToggle) {
                 plotFunction();
             }
+            drawOriginLine();
         };
 
         const updateSimulationCanvas = async (n, time) => {
@@ -259,6 +272,8 @@ document.addEventListener("DOMContentLoaded", () => {
             resetCountingArray();
             updateTheoryCanvas();
         });
+
+        drawOriginLine();
 
     } catch (error) {
         console.error('An error occurred:', error);
